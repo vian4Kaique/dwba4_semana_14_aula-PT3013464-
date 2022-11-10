@@ -66,6 +66,11 @@
               <td>{{contatos[value]['assunto']}}</td>
               <td>{{contatos[value]['mensagem']}}</td>
               <td>{{contatos[value]['resposta']}}</td>
+			  <td>
+				  <form method='POST' action ="/delete/{{value}}">
+					  <input type= "submit" value= "Eliminar registro" name ="deleteOne"/>
+				  </form>
+				 </td>  
             </tr>  
           {% endfor %}                      
         </table>       

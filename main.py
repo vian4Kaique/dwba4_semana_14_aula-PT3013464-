@@ -1,5 +1,6 @@
 import logging
 import traceback
+from flask import redirect
 
 import flask
 from replit import db
@@ -17,7 +18,11 @@ def cadastroContatos():
     contatos = db.get('contatos', {}); 
     print(contatos);
     if flask.request.method == "POST":      
-      contatos[flask.request.form['email']] = {'nome': flask.request.form['nome'], 'telefone': flask.request.form['telefone'], 'assunto': flask.request.form['assunto'], 'mensagem': flask.request.form['mensagem'], 'resposta': flask.request.form['resposta']}
+      contatos[flask.request.form['email']] = {'nome': flask.request.form['nome'],
+                                              'telefone': flask.request.form['telefone'],
+                                              'assunto': flask.request.form['assunto'],
+                                              'mensagem': flask.request.form['mensagem'],
+                                              'resposta': flask.request.form['resposta']}
     db['contatos'] = contatos
     return flask.render_template('contatos.html', contatos=contatos)
   except Exception as e:
@@ -32,5 +37,17 @@ def limparBanco():
   except Exception as e:
     logging.exception(e)
     return flask.render_template('contatos.html')
+
+
+@app.route('/delete/<email>', methods=['POST'])
+def delete(email):
+	try:
+		contatos = db.get('contatos', {});
+		del contatos[email];
+		db['contatos'] = contatos;
+		return redirect('/');
+	except Exception as e:
+		logging.exception(e)
+		return flask.render_template('contatos.html')
     
 app.run('0.0.0.0')
